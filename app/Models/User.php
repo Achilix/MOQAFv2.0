@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The table associated with the model.
@@ -97,5 +99,29 @@ class User extends Authenticatable
     public function isHandyman(): bool
     {
         return $this->handyman()->exists();
+    }
+
+    /**
+     * Get conversations where this user is user1.
+     */
+    public function conversationsAsUser1(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'user1_id', 'id');
+    }
+
+    /**
+     * Get conversations where this user is user2.
+     */
+    public function conversationsAsUser2(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'user2_id', 'id');
+    }
+
+    /**
+     * Get all messages sent by this user.
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id');
     }
 }

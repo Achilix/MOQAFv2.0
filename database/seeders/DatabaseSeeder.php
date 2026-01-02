@@ -2,24 +2,43 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->command->info('🌱 Starting database seeding...');
+        
+        // Order matters! Don't change the sequence
+        $this->call([
+            CategorySeeder::class,      // 1. Create categories first
+            UserSeeder::class,           // 2. Create users (clients & handymen)
+            GigSeeder::class,            // 3. Create gigs (needs handymen & categories)
+            OrderSeeder::class,          // 4. Create orders (needs users, handymen, gigs)
+            ReviewSeeder::class,         // 5. Create reviews (needs completed orders)
+            FavoriteSeeder::class,       // 6. Create favorites (needs users & gigs)
+            NotificationSeeder::class,   // 7. Create additional notifications
         ]);
+
+        $this->command->newLine();
+        $this->command->info('✅ Database seeded successfully!');
+        $this->command->newLine();
+        $this->command->info('📊 Test Data Summary:');
+        $this->command->info('   • 10 Clients created');
+        $this->command->info('   • 15 Handymen created');
+        $this->command->info('   • 6 Parent Categories with 21 Subcategories');
+        $this->command->info('   • 25+ Gigs created');
+        $this->command->info('   • 30-50 Orders created');
+        $this->command->info('   • Reviews with ratings for completed orders');
+        $this->command->info('   • Favorites and Notifications added');
+        $this->command->newLine();
+        $this->command->info('🔐 Test Credentials:');
+        $this->command->info('   Client: sarah0@example.com / password123');
+        $this->command->info('   Handyman: ahmed0@handyman.com / password123');
     }
 }
+
