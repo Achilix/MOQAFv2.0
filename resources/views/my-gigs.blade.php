@@ -39,21 +39,14 @@
 
                 {{-- Type --}}
                 <div class="mb-6">
-                    <label for="type" class="block text-white font-semibold mb-2">{{ __('common.service_type') }}</label>
-                    <select id="type" name="type" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" required>
+                    <label for="service_id" class="block text-white font-semibold mb-2">{{ __('common.service_type') }}</label>
+                    <select id="service_id" name="service_id" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" required>
                         <option value="">{{ __('common.select_service_type') }}</option>
-                        <option value="Plumbing">{{ __('common.service_plumbing') }}</option>
-                        <option value="Electrical">{{ __('common.service_electrical') }}</option>
-                        <option value="Carpentry">{{ __('common.service_carpentry') }}</option>
-                        <option value="Painting">{{ __('common.service_painting') }}</option>
-                        <option value="Cleaning">{{ __('common.service_cleaning') }}</option>
-                        <option value="HVAC">{{ __('common.service_hvac') }}</option>
-                        <option value="Landscaping">{{ __('common.service_landscaping') }}</option>
-                        <option value="Roofing">{{ __('common.service_roofing') }}</option>
-                        <option value="Appliance Repair">{{ __('common.service_appliance_repair') }}</option>
-                        <option value="Other">{{ __('common.service_other') }}</option>
+                        @foreach($services as $service)
+                            <option value="{{ $service->id }}">{{ $service->icon }} {{ $service->name }}</option>
+                        @endforeach
                     </select>
-                    @error('type')
+                    @error('service_id')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
@@ -63,6 +56,43 @@
                     <label for="description" class="block text-white font-semibold mb-2">{{ __('common.description') }}</label>
                     <textarea id="description" name="description" rows="4" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" placeholder="{{ __('common.gig_description_placeholder') }}"></textarea>
                     @error('description')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Price and Duration --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="price" class="block text-white font-semibold mb-2">Price ($)</label>
+                        <input type="number" id="price" name="price" step="0.01" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" placeholder="e.g., 50.00">
+                        @error('price')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="duration" class="block text-white font-semibold mb-2">Duration</label>
+                        <input type="text" id="duration" name="duration" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" placeholder="e.g., 2 hours">
+                        @error('duration')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Location --}}
+                <div class="mb-6">
+                    <label for="location" class="block text-white font-semibold mb-2">Location</label>
+                    <input type="text" id="location" name="location" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" placeholder="e.g., Riyadh, Jeddah">
+                    @error('location')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Availability --}}
+                <div class="mb-6">
+                    <label for="availability" class="block text-white font-semibold mb-2">Availability</label>
+                    <textarea id="availability" name="availability" rows="3" class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500" placeholder="e.g., Mon-Fri 9AM-5PM"></textarea>
+                    @error('availability')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
@@ -117,12 +147,16 @@
                                 {{ __('common.created_label') }} {{ $gig->created_at->diffForHumans() }}
                             </span>
                             <div class="flex gap-2">
-                                <button class="text-indigo-500 hover:text-indigo-400 font-semibold text-sm">
+                                <a href="{{ route('gigs.edit', $gig->id_gig) }}" class="text-indigo-500 hover:text-indigo-400 font-semibold text-sm">
                                     {{ __('common.edit') }}
-                                </button>
-                                <button class="text-red-500 hover:text-red-400 font-semibold text-sm">
-                                    {{ __('common.delete') }}
-                                </button>
+                                </a>
+                                <form action="{{ route('gigs.destroy', $gig->id_gig) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this gig?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:text-red-400 font-semibold text-sm">
+                                        {{ __('common.delete') }}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

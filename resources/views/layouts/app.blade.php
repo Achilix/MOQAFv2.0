@@ -40,13 +40,13 @@
             <a href="{{ route('home') }}" class="text-sm/6 font-semibold {{ request()->routeIs('home') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.home') }}</a>
             <a href="{{ route('dashboard') }}" class="text-sm/6 font-semibold {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.dashboard') }}</a>
             <a href="{{ route('my-gigs') }}" class="text-sm/6 font-semibold {{ request()->routeIs('my-gigs') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.my_gigs') }}</a>
-            <a href="#" class="text-sm/6 font-semibold text-gray-400 hover:text-white">{{ __('common.my_orders') }}</a>
+            <a href="{{ route('my-orders') }}" class="text-sm/6 font-semibold {{ request()->routeIs('my-orders') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.my_orders') }}</a>
           @elseif($isClient)
             {{-- Client Navigation --}}
             <a href="{{ route('home') }}" class="text-sm/6 font-semibold {{ request()->routeIs('home') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.home') }}</a>
             <a href="{{ route('dashboard') }}" class="text-sm/6 font-semibold {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.dashboard') }}</a>
             <a href="{{ route('services') }}" class="text-sm/6 font-semibold {{ request()->routeIs('services') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.find_a_handyman') }}</a>
-            <a href="#" class="text-sm/6 font-semibold text-gray-400 hover:text-white">{{ __('common.my_orders') }}</a>
+            <a href="{{ route('my-orders') }}" class="text-sm/6 font-semibold {{ request()->routeIs('my-orders') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.my_orders') }}</a>
           @else
             {{-- Default authenticated user --}}
             <a href="{{ route('home') }}" class="text-sm/6 font-semibold {{ request()->routeIs('home') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.home') }}</a>
@@ -58,7 +58,7 @@
           {{-- Guest Navigation --}}
           <a href="{{ route('how-it-works') }}" class="text-sm/6 font-semibold {{ request()->routeIs('how-it-works') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.how_it_works') }}</a>
           <a href="{{ route('services') }}" class="text-sm/6 font-semibold {{ request()->routeIs('services') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.find_a_handyman') }}</a>
-          <a href="#" class="text-sm/6 font-semibold text-gray-400 hover:text-white">{{ __('common.become_handyman') }}</a>
+          <a href="{{ route('become-handyman') }}" class="text-sm/6 font-semibold {{ request()->routeIs('become-handyman') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.become_handyman') }}</a>
           <a href="/about" class="text-sm/6 font-semibold {{ request()->is('about') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.about_moqaf') }}</a>
         @endauth
       </div>
@@ -69,6 +69,8 @@
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
             </svg>
+            <span id="unreadDot" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-black"></span>
+            <span id="unreadBadge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold min-w-5 h-5 rounded-full flex items-center justify-center px-1"></span>
           </a>
         @endauth
 
@@ -93,12 +95,9 @@
 
         @auth
           <span class="text-sm text-gray-400">{{ Auth::user()->fname }}</span>
-          <form method="POST" action="{{ route('logout') }}" class="inline">
-            @csrf
-            <button type="submit" class="text-sm/6 font-semibold text-white hover:text-gray-300">
-              {{ __('common.sign_out') }} <span aria-hidden="true">&rarr;</span>
-            </button>
-          </form>
+          <a href="{{ route('logout.get') }}" class="text-sm/6 font-semibold text-white hover:text-gray-300">
+            {{ __('common.sign_out') }} <span aria-hidden="true">&rarr;</span>
+          </a>
         @else
           <a href="/login" class="text-sm/6 font-semibold text-white">{{ __('common.sign_in') }} <span aria-hidden="true">&rarr;</span></a>
         @endauth
@@ -108,6 +107,38 @@
   <div class="relative px-6 pt-32 lg:px-8">
     @yield('content')
   </div>
+
+  @auth
+  <script>
+    // Check for unread messages
+    function checkUnreadMessages() {
+      fetch('{{ route("conversations.unread") }}')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const unreadDot = document.getElementById('unreadDot');
+            const unreadBadge = document.getElementById('unreadBadge');
+            
+            if (data.unread_count > 0) {
+              unreadDot.classList.remove('hidden');
+              unreadBadge.textContent = data.unread_count;
+              unreadBadge.classList.remove('hidden');
+            } else {
+              unreadDot.classList.add('hidden');
+              unreadBadge.classList.add('hidden');
+            }
+          }
+        })
+        .catch(err => console.error('Failed to check unread messages:', err));
+    }
+
+    // Check immediately on page load
+    checkUnreadMessages();
+
+    // Check every 10 seconds
+    setInterval(checkUnreadMessages, 10000);
+  </script>
+  @endauth
 
   {{-- Chat Bubble (only for authenticated users) --}}
   @auth

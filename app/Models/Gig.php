@@ -18,13 +18,19 @@ class Gig extends Model
     protected $fillable = [
         'title',
         'type',
+        'service_id',
         'description',
         'photos',
+        'price',
+        'duration',
+        'location',
+        'availability',
     ];
 
     protected $casts = [
         'photos' => 'array',
         'created_at' => 'datetime',
+        'price' => 'decimal:2',
     ];
 
     const CREATED_AT = 'created_at';
@@ -51,6 +57,14 @@ class Gig extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'id_gig', 'id_gig');
+    }
+
+    /**
+     * Get the service this gig belongs to
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
     }
 
     /**

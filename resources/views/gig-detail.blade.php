@@ -61,8 +61,49 @@
                     <p class="text-gray-400 text-sm mb-1">Category</p>
                     <p class="text-white font-semibold">{{ $gig->type }}</p>
                 </div>
+
+                {{-- Price --}}
+                @if($gig->price)
+                <div>
+                    <p class="text-gray-400 text-sm mb-1">Price</p>
+                    <p class="text-white font-semibold text-lg">${{ number_format($gig->price, 2) }}</p>
+                </div>
+                @endif
+
+                {{-- Duration --}}
+                @if($gig->duration)
+                <div>
+                    <p class="text-gray-400 text-sm mb-1">Duration</p>
+                    <p class="text-white font-semibold">{{ $gig->duration }}</p>
+                </div>
+                @endif
+
+                {{-- Location --}}
+                @if($gig->location)
+                <div>
+                    <p class="text-gray-400 text-sm mb-1">Location</p>
+                    <p class="text-white font-semibold">{{ $gig->location }}</p>
+                </div>
+                @endif
             </div>
         </div>
+
+        {{-- Photos Section --}}
+        @if($gig->photos)
+            @php
+                $photos = is_array($gig->photos) ? $gig->photos : json_decode($gig->photos, true) ?? [];
+            @endphp
+            @if(!empty($photos))
+                <div class="px-8 py-6 border-b border-gray-700">
+                    <h2 class="text-2xl font-bold text-white mb-4">Photos</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        @foreach($photos as $photo)
+                            <img src="{{ asset('storage/' . $photo) }}" alt="Gig photo" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition cursor-pointer">
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        @endif
 
         {{-- Description Section --}}
         <div class="px-8 py-6 border-b border-gray-700">
@@ -73,6 +114,14 @@
                 <p class="text-gray-500 italic">No description provided</p>
             @endif
         </div>
+
+        {{-- Availability Section --}}
+        @if($gig->availability)
+            <div class="px-8 py-6 border-b border-gray-700">
+                <h2 class="text-2xl font-bold text-white mb-4">Availability</h2>
+                <p class="text-gray-300 leading-relaxed whitespace-pre-wrap">{{ $gig->availability }}</p>
+            </div>
+        @endif
 
         {{-- Handymen Section --}}
         @if ($gig->handymen->isNotEmpty())

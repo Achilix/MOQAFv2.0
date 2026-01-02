@@ -15,11 +15,16 @@ class ChatController extends Controller
     public function start(Request $request)
     {
         $request->validate([
-            'other_user_id' => ['required', 'exists:users,id'],
+            'other_user_id' => ['nullable', 'exists:users,id'],
+            'handyman_id' => ['nullable', 'exists:users,id'],
         ]);
 
         $userId = Auth::id();
-        $otherUserId = $request->integer('other_user_id');
+        $otherUserId = $request->integer('other_user_id') ?: $request->integer('handyman_id');
+
+        if (!$otherUserId) {
+            return back()->with('error', 'User ID is required');
+        }
 
         if ($userId === $otherUserId) {
             return back()->with('error', 'Cannot start conversation with yourself');
@@ -70,6 +75,12 @@ class ChatController extends Controller
         try {
             $this->authorize($conversation);
 
+            // Mark all messages in this conversation as read for the current user
+            $conversation->messages()
+                ->where('sender_id', '!=', Auth::id())
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+
             $messages = $conversation->messages()
                 ->with('sender')
                 ->orderBy('created_at', 'asc')
@@ -82,6 +93,7 @@ class ChatController extends Controller
                         'sender_name' => $msg->sender->fname . ' ' . $msg->sender->lname,
                         'created_at' => $msg->created_at->format('H:i'),
                         'created_at_human' => $msg->created_at->diffForHumans(),
+                        'read_at' => $msg->read_at ? $msg->read_at->format('H:i') : null,
                     ];
                 })
                 ->toArray();
@@ -172,6 +184,35 @@ class ChatController extends Controller
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get unread message count (JSON API)
+     */
+    public function unreadCount()
+    {
+        try {
+            $userId = Auth::id();
+            
+            $unreadCount = Message::whereHas('conversation', function($query) use ($userId) {
+                $query->where('user1_id', $userId)
+                      ->orWhere('user2_id', $userId);
+            })
+            ->where('sender_id', '!=', $userId)
+            ->whereNull('read_at')
+            ->count();
+
+            return response()->json([
+                'success' => true,
+                'unread_count' => $unreadCount,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Unread count error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to get unread count',
             ], 500);
         }
     }
