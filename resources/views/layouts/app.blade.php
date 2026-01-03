@@ -33,9 +33,13 @@
             $user = Auth::user();
             $isHandyman = $user->isHandyman();
             $isClient = $user->isClient();
+            $isAdmin = isset($user->role) && $user->role === 'admin';
           @endphp
           
-          @if($isHandyman)
+          @if($isAdmin)
+            {{-- Admin Navigation --}}
+            <a href="{{ route('admin.dashboard') }}" class="text-sm/6 font-semibold {{ request()->routeIs('admin.*') ? 'text-white' : 'text-gray-400 hover:text-white' }}">Admin Panel</a>
+          @elseif($isHandyman)
             {{-- Handyman Navigation --}}
             <a href="{{ route('home') }}" class="text-sm/6 font-semibold {{ request()->routeIs('home') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.home') }}</a>
             <a href="{{ route('dashboard') }}" class="text-sm/6 font-semibold {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400 hover:text-white' }}">{{ __('common.dashboard') }}</a>

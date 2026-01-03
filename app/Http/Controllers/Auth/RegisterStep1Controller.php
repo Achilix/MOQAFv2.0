@@ -19,6 +19,10 @@ class RegisterStep1Controller extends Controller
         $validated = $request->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
+            'agree_terms' => 'required|accepted',
+        ], [
+            'agree_terms.required' => 'You must agree to the terms and conditions to continue.',
+            'agree_terms.accepted' => 'You must agree to the terms and conditions to continue.',
         ]);
 
         $user = User::create([

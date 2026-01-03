@@ -43,6 +43,7 @@ class User extends Authenticatable
         'photo',
         'email',
         'password', // changed from password_hash
+        'role',
     ];
 
     /**

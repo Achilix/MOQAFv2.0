@@ -14,15 +14,6 @@
         <p class="mt-2 text-center text-sm/6 text-gray-400">Step 1 of 2 - Email & Password</p>
       </div>
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        @if ($errors->any())
-          <div class="mb-6">
-            <ul class="list-disc list-inside text-red-500 text-sm">
-              @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-              @endforeach
-            </ul>
-          </div>
-        @endif
         <form action="{{ route('register.submit.step1') }}" method="POST" class="space-y-6">
           @csrf
           <div>
@@ -43,6 +34,20 @@
             <label for="password_confirmation" class="block text-sm/6 font-medium text-gray-100">Confirm Password</label>
             <div class="mt-2">
               <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+            </div>
+          </div>
+
+          <div class="flex items-start">
+            <div class="flex h-6 items-center">
+              <input id="agree_terms" name="agree_terms" type="checkbox" required class="h-4 w-4 rounded border-gray-500 bg-white/5 text-indigo-500 focus:ring-indigo-500" />
+            </div>
+            <div class="ml-3 text-sm/6">
+              <label for="agree_terms" class="font-medium text-gray-100">
+                I agree to the 
+                <a href="{{ route('terms-and-conditions') }}" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline">Terms and Conditions</a>
+              </label>
+              <p class="mt-1 text-gray-500 text-xs">You must agree to our terms and conditions to continue. Read them carefully as they include important liability disclaimers.</p>
+              @error('agree_terms') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
           </div>
           <div>

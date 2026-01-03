@@ -48,6 +48,14 @@ class Review extends Model
     }
 
     /**
+     * Get the user (client) who wrote this review (alias for client).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'client_id', 'id');
+    }
+
+    /**
      * Get the handyman being reviewed.
      */
     public function handyman(): BelongsTo

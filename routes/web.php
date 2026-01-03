@@ -29,6 +29,18 @@ Route::get('/', function (Request $request) {
 Route::get('/services', [HomeController::class, 'index'])->name('services');
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
 
+// Redirect admin to admin dashboard
+Route::get('/admin-home', function () {
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('home');
+})->name('admin-home')->middleware('auth');
+
+Route::get('/terms-and-conditions', function () {
+    return view('terms-and-conditions');
+})->name('terms-and-conditions');
+
 // Language switching
 Route::get('/language/{locale}', [LocalizationController::class, 'setLanguage'])->name('language.switch');
 
@@ -46,6 +58,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout.get');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
     return view('dashboard');
 })->name('dashboard')->middleware('auth');
 
@@ -109,4 +124,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('reviews', AdminReviewController::class, ['only' => ['index', 'show', 'destroy']]);
     Route::post('/reviews/{id}/toggle-flag', [AdminReviewController::class, 'toggleFlag'])->name('reviews.toggle-flag');
     Route::get('/reviews/export/csv', [AdminReviewController::class, 'export'])->name('reviews.export');
-}););
+});
