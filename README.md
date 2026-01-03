@@ -13,19 +13,22 @@ A modern, full-featured handyman service marketplace platform built with Laravel
 -   **Messaging System**: Real-time chat between clients and handymen
 -   **Review & Rating System**: Client feedback and service quality ratings
 -   **Notification System**: Email and in-app notifications for bookings and updates
+-   **Admin Dashboard**: Complete platform management with statistics and controls
 
 ### Advanced Features
 
 -   **Fiverr-Style Tiered Pricing**: Handymen can offer three pricing tiers for each service:
-    -   **BASIC**: Entry-level service for small/quick jobs
-    -   **MEDIUM**: Standard service for apartment-sized projects
-    -   **PREMIUM**: Comprehensive service for full-house projects
+    -   **BASIC**: Entry-level service for small/quick jobs ($25-$100)
+    -   **MEDIUM**: Standard service for apartment-sized projects ($75-$300)
+    -   **PREMIUM**: Comprehensive service for full-house projects ($200-$1,000)
 -   **Dynamic Pricing Model**: Each tier includes:
     -   Customizable service description
     -   Price per tier
     -   Delivery/completion timeframe
 -   **Smart Search & Filtering**: Filter gigs by service type, location, price range, and ratings
 -   **Responsive Design**: Mobile-friendly interface for iOS and Android browsers
+-   **Terms & Conditions**: Legal protection with required acceptance on signup
+-   **Professional Admin Interface**: Manage users, gigs, orders, and reviews from one dashboard
 
 ## Tech Stack
 
@@ -77,6 +80,57 @@ MOQAF/
 │   └── api.php              # API routes including tier endpoints
 └── tests/                   # Feature and unit tests
 ```
+
+## Quick Start
+
+### For Development
+
+```bash
+# Install dependencies
+composer install
+npm install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Setup database
+php artisan migrate
+php artisan db:seed --class=GigTierSeeder
+
+# Create admin user
+php artisan make:admin
+
+# Start development servers
+php artisan serve --port=8000
+npm run dev
+```
+
+### Admin Login
+
+**Default Admin Credentials:**
+- Email: `admin@moqaf.com`
+- Password: `Admin@12345`
+
+**Access Admin Dashboard:**
+- Navigate to: `http://localhost:8000/admin/dashboard`
+- Or login at: `http://localhost:8000/login`
+
+### Key URLs
+
+| Page | URL |
+|------|-----|
+| Home | `/` |
+| Services | `/services` |
+| Login | `/login` |
+| Register | `/register` |
+| Dashboard | `/dashboard` |
+| My Gigs | `/my-gigs` |
+| My Orders | `/my-orders` |
+| Admin Panel | `/admin/dashboard` |
+| Terms & Conditions | `/terms-and-conditions` |
+
+---
 
 ## Installation & Setup
 
@@ -222,6 +276,19 @@ DELETE /api/tiers/{tier_id}
 -   **MEDIUM** ($150 / 7 days): Install lights and outlets in apartment, ensure proper wiring
 -   **PREMIUM** ($500 / 14 days): Full electrical work including rewiring entire house, install complex systems
 
+## Terms and Conditions
+
+All users must accept the platform's **Terms and Conditions** during signup. Key points:
+
+- All work must be initiated through official MOQAF orders
+- Platform is NOT responsible for work without official orders
+- Users agree to legal compliance and professional standards
+- Disputes are only handled for official orders
+
+View full terms: `/terms-and-conditions`
+
+---
+
 ## API Documentation
 
 Complete API documentation is available in [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
@@ -312,6 +379,29 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For issues, questions, or suggestions, please open an issue on GitHub or contact the development team.
 
 ## Changelog
+
+### Version 1.2.0 (January 2026) - Current
+
+**NEW:**
+- ✨ Complete Admin Dashboard with 5 management sections
+- ✨ Terms and Conditions page with legal protections
+- ✨ Admin user creation command (`php artisan make:admin`)
+- ✨ Terms acceptance checkbox on signup
+- ✨ User role field (user/admin)
+- ✨ Admin middleware for route protection
+- ✨ Review `user` relationship alias
+
+**IMPROVED:**
+- 🔧 Dashboard controller data passing (compact method)
+- 🔧 Navbar admin detection with safe role checking
+- 🔧 Route middleware registration in bootstrap
+- 🔧 User model with role field in fillable array
+- 🔧 Admin redirection from dashboard route
+
+**FIXES:**
+- 🐛 Fixed route syntax error (extra semicolon)
+- 🐛 Fixed admin dashboard empty view issue
+- 🐛 Fixed RouteNotFoundException for admin routes
 
 ### Version 1.1.0 (January 2026)
 
