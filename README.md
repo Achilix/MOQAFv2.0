@@ -109,25 +109,27 @@ npm run dev
 ### Admin Login
 
 **Default Admin Credentials:**
-- Email: `admin@moqaf.com`
-- Password: `Admin@12345`
+
+-   Email: `admin@moqaf.com`
+-   Password: `Admin@12345`
 
 **Access Admin Dashboard:**
-- Navigate to: `http://localhost:8000/admin/dashboard`
-- Or login at: `http://localhost:8000/login`
+
+-   Navigate to: `http://localhost:8000/admin/dashboard`
+-   Or login at: `http://localhost:8000/login`
 
 ### Key URLs
 
-| Page | URL |
-|------|-----|
-| Home | `/` |
-| Services | `/services` |
-| Login | `/login` |
-| Register | `/register` |
-| Dashboard | `/dashboard` |
-| My Gigs | `/my-gigs` |
-| My Orders | `/my-orders` |
-| Admin Panel | `/admin/dashboard` |
+| Page               | URL                     |
+| ------------------ | ----------------------- |
+| Home               | `/`                     |
+| Services           | `/services`             |
+| Login              | `/login`                |
+| Register           | `/register`             |
+| Dashboard          | `/dashboard`            |
+| My Gigs            | `/my-gigs`              |
+| My Orders          | `/my-orders`            |
+| Admin Panel        | `/admin/dashboard`      |
 | Terms & Conditions | `/terms-and-conditions` |
 
 ---
@@ -280,10 +282,10 @@ DELETE /api/tiers/{tier_id}
 
 All users must accept the platform's **Terms and Conditions** during signup. Key points:
 
-- All work must be initiated through official MOQAF orders
-- Platform is NOT responsible for work without official orders
-- Users agree to legal compliance and professional standards
-- Disputes are only handled for official orders
+-   All work must be initiated through official MOQAF orders
+-   Platform is NOT responsible for work without official orders
+-   Users agree to legal compliance and professional standards
+-   Disputes are only handled for official orders
 
 View full terms: `/terms-and-conditions`
 
@@ -383,25 +385,28 @@ For issues, questions, or suggestions, please open an issue on GitHub or contact
 ### Version 1.2.0 (January 2026) - Current
 
 **NEW:**
-- ✨ Complete Admin Dashboard with 5 management sections
-- ✨ Terms and Conditions page with legal protections
-- ✨ Admin user creation command (`php artisan make:admin`)
-- ✨ Terms acceptance checkbox on signup
-- ✨ User role field (user/admin)
-- ✨ Admin middleware for route protection
-- ✨ Review `user` relationship alias
+
+-   ✨ Complete Admin Dashboard with 5 management sections
+-   ✨ Terms and Conditions page with legal protections
+-   ✨ Admin user creation command (`php artisan make:admin`)
+-   ✨ Terms acceptance checkbox on signup
+-   ✨ User role field (user/admin)
+-   ✨ Admin middleware for route protection
+-   ✨ Review `user` relationship alias
 
 **IMPROVED:**
-- 🔧 Dashboard controller data passing (compact method)
-- 🔧 Navbar admin detection with safe role checking
-- 🔧 Route middleware registration in bootstrap
-- 🔧 User model with role field in fillable array
-- 🔧 Admin redirection from dashboard route
+
+-   🔧 Dashboard controller data passing (compact method)
+-   🔧 Navbar admin detection with safe role checking
+-   🔧 Route middleware registration in bootstrap
+-   🔧 User model with role field in fillable array
+-   🔧 Admin redirection from dashboard route
 
 **FIXES:**
-- 🐛 Fixed route syntax error (extra semicolon)
-- 🐛 Fixed admin dashboard empty view issue
-- 🐛 Fixed RouteNotFoundException for admin routes
+
+-   🐛 Fixed route syntax error (extra semicolon)
+-   🐛 Fixed admin dashboard empty view issue
+-   🐛 Fixed RouteNotFoundException for admin routes
 
 ### Version 1.1.0 (January 2026)
 

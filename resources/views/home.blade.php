@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="mx-auto max-w-6xl py-12 px-6 lg:px-8">
     @php
@@ -108,7 +110,9 @@
 
                         {{-- Description --}}
                         @if ($gig->description)
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-3">{{ $gig->description }}</p>
+                            <p class="text-gray-400 text-sm mb-4 line-clamp-2" title="{{ $gig->description }}">
+                                {{ Str::limit($gig->description, 120, '...') }}
+                            </p>
                         @else
                             <p class="text-gray-500 text-sm mb-4 italic">No description provided</p>
                         @endif

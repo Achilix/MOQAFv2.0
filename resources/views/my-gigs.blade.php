@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="min-h-screen bg-black pt-20 px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
@@ -136,7 +138,7 @@
                         
                         {{-- Description --}}
                         @if ($gig->description)
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{ $gig->description }}</p>
+                            <p class="text-gray-400 text-sm mb-4" title="{{ $gig->description }}">{{ Str::limit($gig->description, 140, '...') }}</p>
                         @else
                             <p class="text-gray-500 text-sm mb-4 italic">{{ __('common.no_description') }}</p>
                         @endif
@@ -158,18 +160,21 @@
                         @endif
 
                         {{-- Created Date --}}
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-800">
+                        <div class="flex justify-between items-center gap-4 pt-4 border-t border-gray-800">
                             <span class="text-gray-500 text-sm">
                                 {{ __('common.created_label') }} {{ $gig->created_at->diffForHumans() }}
                             </span>
-                            <div class="flex gap-2">
-                                <a href="{{ route('gigs.edit', $gig->id_gig) }}" class="text-indigo-500 hover:text-indigo-400 font-semibold text-sm">
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('gigs.show', $gig->id_gig) }}" class="inline-flex items-center justify-center rounded-md border border-gray-700 px-3 py-1.5 text-sm font-semibold text-white hover:border-indigo-500 hover:text-indigo-200 transition">
+                                    View Service
+                                </a>
+                                <a href="{{ route('gigs.edit', $gig->id_gig) }}" class="inline-flex items-center justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">
                                     {{ __('common.edit') }}
                                 </a>
                                 <form action="{{ route('gigs.destroy', $gig->id_gig) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this gig?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-400 font-semibold text-sm">
+                                    <button type="submit" class="inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500 transition">
                                         {{ __('common.delete') }}
                                     </button>
                                 </form>

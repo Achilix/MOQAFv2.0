@@ -82,16 +82,22 @@
                                 </td>
                                 <td class="px-6 py-4 text-gray-400 text-sm">{{ $user->created_at->format('M d, Y') }}</td>
                                 <td class="px-6 py-4">
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('admin.users.show', $user->id) }}" 
-                                           class="text-indigo-500 hover:text-indigo-400 text-sm">View</a>
-                                        <a href="{{ route('admin.users.edit', $user->id) }}" 
-                                           class="text-blue-500 hover:text-blue-400 text-sm">Edit</a>
+                                    <div class="flex items-center gap-3">
+                                        <a href="{{ route('admin.users.show', $user->id) }}"
+                                           class="inline-flex items-center justify-center rounded-md border border-gray-700 px-3 py-1.5 text-sm font-semibold text-white hover:border-indigo-500 hover:text-indigo-200 transition">
+                                            View
+                                        </a>
+                                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                                           class="inline-flex items-center justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">
+                                            Edit
+                                        </a>
                                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" 
                                               onsubmit="return confirm('Are you sure?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-400 text-sm">Delete</button>
+                                            <button type="submit" class="inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500 transition">
+                                                Delete
+                                            </button>
                                         </form>
                                     </div>
                                 </td>

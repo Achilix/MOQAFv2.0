@@ -75,10 +75,10 @@
 
                         <div class="flex justify-between items-center">
                             <p class="text-gray-500 text-sm">{{ $review->created_at->diffForHumans() }}</p>
-                            <div class="flex gap-2">
+                            <div class="flex items-center gap-3">
                                 <form action="{{ route('admin.reviews.toggle-flag', $review->id) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="text-yellow-500 hover:text-yellow-400 text-sm">
+                                    <button type="submit" class="inline-flex items-center justify-center rounded-md bg-amber-500 px-3 py-1.5 text-sm font-semibold text-black hover:bg-amber-400 transition">
                                         {{ $review->is_flagged ? 'Unflag' : 'Flag' }}
                                     </button>
                                 </form>
@@ -86,7 +86,7 @@
                                       onsubmit="return confirm('Delete this review?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-400 text-sm">Delete</button>
+                                    <button type="submit" class="inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500 transition">Delete</button>
                                 </form>
                             </div>
                         </div>
