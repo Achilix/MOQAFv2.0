@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\GigController as ApiGigController;
+use App\Http\Controllers\Api\TierController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ChatController;
@@ -60,6 +61,12 @@ Route::prefix('v1')->group(function () {
         Route::delete('/gigs/{id}', [ApiGigController::class, 'destroy']);
         Route::get('/my-gigs', [ApiGigController::class, 'myGigs']);
         Route::post('/gigs/{id}/apply', [ApiGigController::class, 'apply']);
+
+        // Pricing Tiers routes
+        Route::get('/gigs/{gigId}/tiers', [TierController::class, 'getTiersByGig']);
+        Route::post('/tiers', [TierController::class, 'store']);
+        Route::put('/tiers/{id}', [TierController::class, 'update']);
+        Route::delete('/tiers/{id}', [TierController::class, 'destroy']);
 
         // Orders routes
         Route::get('/orders', [OrderController::class, 'index']);

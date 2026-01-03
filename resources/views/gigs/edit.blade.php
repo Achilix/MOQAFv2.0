@@ -111,6 +111,71 @@
                 @enderror
             </div>
 
+            <!-- Pricing Tiers Management -->
+            <div class="mb-6 bg-gray-800 border border-gray-700 rounded-lg p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Pricing Tiers</h2>
+                <p class="text-gray-400 text-sm mb-4">Set up three pricing options for your gig: BASIC (small jobs), MEDIUM (medium-sized work), and PREMIUM (large projects)</p>
+                
+                @php
+                    $tiers = $gig->tiers->keyBy('tier_name') ?? collect();
+                @endphp
+
+                <div class="space-y-6">
+                    @foreach(['BASIC', 'MEDIUM', 'PREMIUM'] as $tierName)
+                        @php
+                            $tier = $tiers->get($tierName);
+                        @endphp
+                        <div class="bg-gray-900 border border-gray-700 rounded-lg p-4">
+                            <div class="flex items-center mb-4">
+                                <span class="text-lg font-semibold text-white">{{ $tierName }}</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-2">Description</label>
+                                    <textarea name="tiers[{{ $tierName }}][description]" 
+                                              rows="2"
+                                              class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-indigo-500"
+                                              placeholder="What's included in this tier?">{{ old('tiers.' . $tierName . '.description', $tier?->description ?? '') }}</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-2">Price ($)</label>
+                                    <input type="number" 
+                                           name="tiers[{{ $tierName }}][base_price]" 
+                                           step="0.01"
+                                           min="0.01"
+                                           value="{{ old('tiers.' . $tierName . '.base_price', $tier?->base_price ?? '') }}"
+                                           class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-indigo-500"
+                                           placeholder="e.g., 50.00"
+                                           required>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 mb-2">Delivery Days</label>
+                                    <input type="number" 
+                                           name="tiers[{{ $tierName }}][delivery_days]" 
+                                           min="1"
+                                           max="30"
+                                           value="{{ old('tiers.' . $tierName . '.delivery_days', $tier?->delivery_days ?? '') }}"
+                                           class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-indigo-500"
+                                           placeholder="e.g., 3"
+                                           required>
+                                </div>
+                            </div>
+
+                            @if($tier)
+                                <div class="mt-3 text-xs text-gray-500">
+                                    Last updated: {{ $tier->updated_at->diffForHumans() }}
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                <p class="text-gray-500 text-xs mt-4">All three tiers are required. Customers will see all pricing options when viewing your gig.</p>
+            </div>
+
             <!-- Existing Photos -->
             @if($gig->photos)
                 @php

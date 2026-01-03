@@ -115,6 +115,44 @@
             @endif
         </div>
 
+        {{-- Pricing Tiers Section --}}
+        @if($gig->tiers && $gig->tiers->count() > 0)
+            <div class="px-8 py-6 border-b border-gray-700">
+                <h2 class="text-2xl font-bold text-white mb-6">Pricing Tiers</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @foreach($gig->tiers as $tier)
+                        <div class="bg-gray-800 border-2 border-gray-700 rounded-lg p-6 hover:border-indigo-500 transition transform hover:scale-105">
+                            {{-- Tier Name --}}
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold text-white">
+                                    {{ $tier->tier_name }}
+                                </h3>
+                                <p class="text-gray-400 text-sm mt-2">{{ $tier->description }}</p>
+                            </div>
+
+                            {{-- Price --}}
+                            <div class="mb-4 border-t border-gray-700 pt-4">
+                                <p class="text-gray-400 text-sm mb-1">Price</p>
+                                <p class="text-3xl font-bold text-indigo-400">${{ number_format($tier->base_price, 2) }}</p>
+                            </div>
+
+                            {{-- Delivery Days --}}
+                            <div class="mb-6 bg-gray-700 bg-opacity-50 rounded px-4 py-3">
+                                <p class="text-gray-400 text-sm">Delivery in</p>
+                                <p class="text-white font-semibold">{{ $tier->delivery_days }} day{{ $tier->delivery_days > 1 ? 's' : '' }}</p>
+                            </div>
+
+                            {{-- Select Button --}}
+                            <button class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition" 
+                                    onclick="selectTier('{{ $tier->tier_name }}', {{ $tier->base_price }}, {{ $tier->delivery_days }})">
+                                Select {{ $tier->tier_name }}
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         {{-- Availability Section --}}
         @if($gig->availability)
             <div class="px-8 py-6 border-b border-gray-700">

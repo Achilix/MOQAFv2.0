@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Gig extends Model
 {
@@ -88,5 +89,13 @@ class Gig extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'gig_id', 'id_gig');
+    }
+
+    /**
+     * Get the pricing tiers for this gig.
+     */
+    public function tiers(): HasMany
+    {
+        return $this->hasMany(GigTier::class, 'id_gig', 'id_gig');
     }
 }

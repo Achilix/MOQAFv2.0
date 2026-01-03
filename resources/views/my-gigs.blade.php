@@ -141,6 +141,22 @@
                             <p class="text-gray-500 text-sm mb-4 italic">{{ __('common.no_description') }}</p>
                         @endif
 
+                        {{-- Pricing Tiers Summary --}}
+                        @if($gig->tiers && $gig->tiers->count() > 0)
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 mb-4 border border-gray-700">
+                                <p class="text-xs text-gray-400 mb-2 font-semibold">Pricing Options:</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    @foreach($gig->tiers as $tier)
+                                        <div class="text-center">
+                                            <p class="text-xs text-gray-500">{{ $tier->tier_name }}</p>
+                                            <p class="text-sm font-bold text-indigo-400">${{ number_format($tier->base_price, 2) }}</p>
+                                            <p class="text-xs text-gray-500">{{ $tier->delivery_days }} day{{ $tier->delivery_days > 1 ? 's' : '' }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Created Date --}}
                         <div class="flex justify-between items-center pt-4 border-t border-gray-800">
                             <span class="text-gray-500 text-sm">
