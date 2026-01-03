@@ -11,6 +11,11 @@ use App\Http\Controllers\LocalizationController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\GigController as AdminGigController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
 Route::get('/', function (Request $request) {
     if ($request->query()) {
@@ -76,3 +81,32 @@ Route::middleware('auth')->group(function () {
     Route::post('/conversations/{conversation}/messages', [ChatController::class, 'storeMessage'])->name('conversations.message');
     Route::get('/conversations/{conversation}/messages', [ChatController::class, 'fetchMessages'])->name('conversations.fetch');
 });
+
+// Admin Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/activity-log', [AdminDashboardController::class, 'activityLog'])->name('activity-log');
+    Route::get('/settings', [AdminDashboardController::class, 'settings'])->name('settings');
+
+    // User Management
+    Route::resource('users', AdminUserController::class);
+    Route::post('/users/{id}/toggle-ban', [AdminUserController::class, 'toggleBan'])->name('users.toggle-ban');
+    Route::get('/users/export/csv', [AdminUserController::class, 'export'])->name('users.export');
+
+    // Gig Management
+    Route::resource('gigs', AdminGigController::class);
+    Route::post('/gigs/{id}/toggle-status', [AdminGigController::class, 'toggleStatus'])->name('gigs.toggle-status');
+    Route::get('/gigs/export/csv', [AdminGigController::class, 'export'])->name('gigs.export');
+
+    // Order Management
+    Route::resource('orders', AdminOrderController::class, ['only' => ['index', 'show']]);
+    Route::post('/orders/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{id}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::get('/orders/export/csv', [AdminOrderController::class, 'export'])->name('orders.export');
+
+    // Review Management
+    Route::resource('reviews', AdminReviewController::class, ['only' => ['index', 'show', 'destroy']]);
+    Route::post('/reviews/{id}/toggle-flag', [AdminReviewController::class, 'toggleFlag'])->name('reviews.toggle-flag');
+    Route::get('/reviews/export/csv', [AdminReviewController::class, 'export'])->name('reviews.export');
+}););
